@@ -9,9 +9,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.co.itcen.bookmall.vo.UserVo;
+import kr.co.itcen.bookmall.vo.CartVo;
 
-public class UserDao {
+public class CartDao {
 	private Connection getConnection() throws SQLException {
 		Connection connection = null;
 
@@ -27,37 +27,34 @@ public class UserDao {
 
 		return connection;
 	}
-
-	public Boolean insert(UserVo vo) {
+	
+	public Boolean insert(CartVo vo) {
 		Boolean result = false;
 		Connection connection = null;
 		Statement stmt = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-
+		
 		try {
 			connection = getConnection();
 
-			String sql = "insert into user values(null, ?, ?, ?, ?, ?)";
+			String sql = "insert into cart values(null, ?, ?, ?)";
 			pstmt = connection.prepareStatement(sql);
 
-			pstmt.setString(1, vo.getName());
-			pstmt.setString(2, vo.getTell());
-			pstmt.setString(3, vo.getEmail());
-			pstmt.setString(4, vo.getPwd());
-			pstmt.setString(5, vo.getAddress());
+			pstmt.setLong(1, vo.getBook_no());
+			pstmt.setLong(2, vo.getUser_no());
+			pstmt.setInt(3, vo.getStock());
 
 			int count = pstmt.executeUpdate();
 			result = (count == 1);
-
+			
 			stmt = connection.createStatement();
 			rs = stmt.executeQuery("select last_insert_id()");
-			if (rs.next()) {
+			if(rs.next()) {
 				Long no = rs.getLong(1);
 				vo.setNo(no);
 			}
 
-			System.out.println("추가 완료!");
 
 		} catch (SQLException e) {
 			System.out.println("error: " + e);
@@ -78,12 +75,11 @@ public class UserDao {
 		}
 
 		return result;
-
 	}
 
-	public List<UserVo> getList() {
-		List<UserVo> result = new ArrayList<UserVo>();
-
+	public List<CartVo> getList() {
+		List<CartVo> result = new ArrayList<CartVo>();
+		
 		Connection connection = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -91,30 +87,26 @@ public class UserDao {
 		try {
 			connection = getConnection();
 
-			String sql = "select * from user order by no asc";
+			String sql = "select * from cart order by user_no asc";
 			pstmt = connection.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
-
-			while (rs.next()) {
+			
+			while(rs.next()) {
 				Long no = rs.getLong(1);
-				String name = rs.getString(2);
-				String tell = rs.getString(3);
-				String email = rs.getString(4);
-				String pwd = rs.getString(5);
-				String address = rs.getString(6);
-
-				UserVo vo = new UserVo();
+				Long book_no = rs.getLong(2);
+				Long user_no = rs.getLong(3);
+				int stock = rs.getInt(4);
+				
+				CartVo vo = new CartVo();
 				vo.setNo(no);
-				vo.setName(name);
-				vo.setTell(tell);
-				vo.setEmail(email);
-				vo.setPwd(pwd);
-				vo.setAddress(address);
-
+				vo.setBook_no(book_no);
+				vo.setUser_no(user_no);
+				vo.setStock(stock);
+				
 				result.add(vo);
 			}
-
+			
 		} catch (SQLException e) {
 			System.out.println("error: " + e);
 		} finally {
@@ -136,7 +128,7 @@ public class UserDao {
 		return result;
 	}
 
-	public Boolean update(Long no, String select, String changeUserInfo) {
+	public Boolean update(Long user_no, Long no, String select, int changeInfo) {
 		Boolean result = false;
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -145,20 +137,12 @@ public class UserDao {
 			connection = getConnection();
 			String sql = null;
 			
-			if(select.equals("name")) {
-				sql = "update user set name = " + "'" + changeUserInfo + "'" + "where no = " + no;
+			if(select.equals("book_no")) {
+				Long changeBookNo = (long)changeInfo;
+				sql = "update cart set book_no = " + "'" + changeBookNo + "'" + "where no = " + no + " and user_no = " + user_no;
 			}
-			if(select.equals("tell")) {
-				sql = "update user set tell = " + "'" + changeUserInfo + "'" + "where no = " + no;
-			}
-			if(select.equals("email")) {
-				sql = "update user set email = " + "'" + changeUserInfo + "'" + "where no = " + no;
-			}
-			if(select.equals("pwd")) {
-				sql = "update user set pwd = " + "'" + changeUserInfo + "'" + "where no = " + no;
-			}
-			if(select.equals("address")) {
-				sql = "update user set address = " + "'" + changeUserInfo + "'" + "where no = " + no;
+			if(select.equals("stock")) {
+				sql = "update cart set stock = " + "'" + changeInfo + "'" + "where no = " + no + " and user_no = " + user_no;
 			}
 
 			pstmt = connection.prepareStatement(sql);
@@ -184,7 +168,7 @@ public class UserDao {
 
 		return result;
 	}
-	
+
 	public Boolean delete(Long no) {
 		Boolean result = false;
 		Connection connection = null;
@@ -193,7 +177,7 @@ public class UserDao {
 		try {
 			connection = getConnection();
 			
-			String sql = "delete from user where no = " + no;
+			String sql = "delete from cart where no = " + no;
 			pstmt = connection.prepareStatement(sql);
 			
 			pstmt.executeUpdate();
