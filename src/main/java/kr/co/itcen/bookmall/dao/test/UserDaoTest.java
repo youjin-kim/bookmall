@@ -10,9 +10,9 @@ public class UserDaoTest {
 
 	public static void main(String[] args) {
 		selectTest();
-		insertTest();
-		updateTest();
-		deleteTest();
+		//insertTest();
+		//updateTest();
+		//deleteTest();
 
 	}
 

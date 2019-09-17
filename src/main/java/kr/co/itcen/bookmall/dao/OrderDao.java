@@ -9,9 +9,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import kr.co.itcen.bookmall.vo.BookVo;
+import kr.co.itcen.bookmall.vo.OrderVo;
 
-public class BookDao {
+public class OrderDao {
 	private Connection getConnection() throws SQLException {
 		Connection connection = null;
 
@@ -28,7 +28,7 @@ public class BookDao {
 		return connection;
 	}
 
-	public Boolean insert(BookVo vo) {
+	public Boolean insert(OrderVo vo) {
 		Boolean result = false;
 		Connection connection = null;
 		Statement stmt = null;
@@ -38,13 +38,12 @@ public class BookDao {
 		try {
 			connection = getConnection();
 
-			String sql = "insert into book values(null, ?, ?, ?, ?)";
+			String sql = "insert into orderTable values(null, ?, ?, ?)";
 			pstmt = connection.prepareStatement(sql);
 
-			pstmt.setLong(1, vo.getCategory_no());
-			pstmt.setString(2, vo.getName());
-			pstmt.setInt(3, vo.getPrice());
-			pstmt.setInt(4, vo.getStock());
+			pstmt.setLong(1, vo.getUserNo());
+			pstmt.setInt(2, vo.getTotalPrice());
+			pstmt.setString(3, vo.getSendAddress());
 
 			int count = pstmt.executeUpdate();
 			result = (count == 1);
@@ -55,8 +54,6 @@ public class BookDao {
 				Long no = rs.getLong(1);
 				vo.setNo(no);
 			}
-
-			System.out.println("추가 완료!");
 
 		} catch (SQLException e) {
 			System.out.println("error: " + e);
@@ -80,8 +77,8 @@ public class BookDao {
 
 	}
 
-	public List<BookVo> getList() {
-		List<BookVo> result = new ArrayList<BookVo>();
+	public List<OrderVo> getList() {
+		List<OrderVo> result = new ArrayList<OrderVo>();
 
 		Connection connection = null;
 		PreparedStatement pstmt = null;
@@ -90,20 +87,26 @@ public class BookDao {
 		try {
 			connection = getConnection();
 
-			String sql = "select book.no, book.name, book.price from book join category where category.no = book.category_no order by category_no asc";
+			String sql = "select orderTable.no, orderTable.user_no, user.name, user.email, orderTable.total_price, orderTable.send_address from orderTable join user where orderTable.user_no = user.no order by orderTable.no asc";
 			pstmt = connection.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
-
 			while (rs.next()) {
-				Long no = rs.getLong(1);
-				String name = rs.getString(2);
-				int price = rs.getInt(3);
 
-				BookVo vo = new BookVo();
+				Long no = rs.getLong(1);
+				Long userNo = rs.getLong(2);
+				String userName = rs.getString(3);
+				String userEmail = rs.getString(4);
+				int totalPrice = rs.getInt(5);
+				String sendAddress = rs.getString(6);
+
+				OrderVo vo = new OrderVo();
 				vo.setNo(no);
-				vo.setName(name);
-				vo.setPrice(price);
+				vo.setUserNo(userNo);
+				vo.setUserName(userName);
+				vo.setUserEmail(userEmail);
+				vo.setTotalPrice(totalPrice);
+				vo.setSendAddress(sendAddress);
 
 				result.add(vo);
 			}
@@ -129,55 +132,6 @@ public class BookDao {
 		return result;
 	}
 
-	public Boolean update(Long no, String select, String changeBookInfo) {
-		Boolean result = false;
-		Connection connection = null;
-		PreparedStatement pstmt = null;
-
-		try {
-			connection = getConnection();
-			String sql = null;
-
-			if (select.equals("name")) {
-				sql = "update book set name = " + "'" + changeBookInfo + "'" + "where no = " + no;
-			}
-			if (select.equals("price")) {
-				int changePrice = Integer.parseInt(changeBookInfo);
-				sql = "update book set price = " + "'" + changePrice + "'" + "where no = " + no;
-			}
-			if (select.equals("stock")) {
-				int changeStock = Integer.parseInt(changeBookInfo);
-				sql = "update book set stock = " + "'" + changeStock + "'" + "where no = " + no;
-			}
-			if (select.equals("category_no")) {
-				Long changeCategoryNo = Long.parseLong(changeBookInfo);
-				sql = "update book set category_no = " + "'" + changeCategoryNo + "'" + "where no = " + no;
-			}
-
-			pstmt = connection.prepareStatement(sql);
-
-			pstmt.executeUpdate();
-
-			System.out.println("변경 완료!");
-
-		} catch (SQLException e) {
-			System.out.println("error: " + e);
-		} finally {
-			try {
-				if (pstmt != null) {
-					pstmt.close();
-				}
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				System.out.println("error: " + e);
-			}
-		}
-
-		return result;
-	}
-
 	public Boolean delete(Long no) {
 		Boolean result = false;
 		Connection connection = null;
@@ -185,14 +139,14 @@ public class BookDao {
 
 		try {
 			connection = getConnection();
-			
-			String sql = "delete from book where no = " + no;
+
+			String sql = "delete from orderTable where no = " + no;
 			pstmt = connection.prepareStatement(sql);
-			
+
 			pstmt.executeUpdate();
-			
+
 			System.out.println("삭제 완료!");
-			
+
 		} catch (SQLException e) {
 			System.out.println("error: " + e);
 		} finally {
@@ -209,6 +163,40 @@ public class BookDao {
 		}
 
 		return result;
+
+	}
+
+	public Boolean update(Long no, String changeSendAddress) {
+		Boolean result = false;
+		Connection connection = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			connection = getConnection();
+			String sql = "update orderTable set send_address = " + "'" + changeSendAddress + "'" + " where no = " + no;
+			
+			pstmt = connection.prepareStatement(sql);
+			pstmt.executeUpdate();
+			
+			System.out.println("변경 완료!");
+			
+		}catch (SQLException e) {
+				System.out.println("error: " + e);
+			} finally {
+				try {
+					if (pstmt != null) {
+						pstmt.close();
+					}
+					if (connection != null) {
+						connection.close();
+					}
+				} catch (SQLException e) {
+					System.out.println("error: " + e);
+				}
+			}
+
+			return result;
+			
 		
 	}
 

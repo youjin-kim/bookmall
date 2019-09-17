@@ -2,27 +2,33 @@ package kr.co.itcen.bookmall.vo;
 
 public class OrderBookVo {
 	private Long no;
-	private Long book_no;
-	private Long order_no;
+	private Long bookNo;
+	private String bookName;
+	private Long orderNo;
 	private int totalCount;
-	
 	public Long getNo() {
 		return no;
 	}
 	public void setNo(Long no) {
 		this.no = no;
 	}
-	public Long getBook_no() {
-		return book_no;
+	public Long getBookNo() {
+		return bookNo;
 	}
-	public void setBook_no(Long book_no) {
-		this.book_no = book_no;
+	public void setBookNo(Long bookNo) {
+		this.bookNo = bookNo;
 	}
-	public Long getOrder_no() {
-		return order_no;
+	public String getBookName() {
+		return bookName;
 	}
-	public void setOrder_no(Long order_no) {
-		this.order_no = order_no;
+	public void setBookName(String bookName) {
+		this.bookName = bookName;
+	}
+	public Long getOrderNo() {
+		return orderNo;
+	}
+	public void setOrderNo(Long orderNo) {
+		this.orderNo = orderNo;
 	}
 	public int getTotalCount() {
 		return totalCount;
@@ -32,8 +38,9 @@ public class OrderBookVo {
 	}
 	@Override
 	public String toString() {
-		return "OrderBookVo [no=" + no + ", book_no=" + book_no + ", order_no=" + order_no + ", totalCount="
-				+ totalCount + "]";
+		return "OrderBookVo [no=" + no + ", bookNo=" + bookNo + ", bookName=" + bookName + ", orderNo=" + orderNo
+				+ ", totalCount=" + totalCount + "]";
 	}
-
+	
+	
 }

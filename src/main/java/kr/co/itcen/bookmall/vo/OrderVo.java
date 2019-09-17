@@ -2,9 +2,23 @@ package kr.co.itcen.bookmall.vo;
 
 public class OrderVo {
 	private Long no;
-	private Long user_no;
-	private int total_price;
-	private String send_address;
+	private Long userNo;
+	private String userName;
+	private String userEmail;
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getUserEmail() {
+		return userEmail;
+	}
+	public void setUserEmail(String userEmail) {
+		this.userEmail = userEmail;
+	}
+	private int totalPrice;
+	private String sendAddress;
 	
 	public Long getNo() {
 		return no;
@@ -12,28 +26,28 @@ public class OrderVo {
 	public void setNo(Long no) {
 		this.no = no;
 	}
-	public Long getUser_no() {
-		return user_no;
+	public Long getUserNo() {
+		return userNo;
 	}
-	public void setUser_no(Long user_no) {
-		this.user_no = user_no;
+	public void setUserNo(Long userNo) {
+		this.userNo = userNo;
 	}
-	public int getTotal_price() {
-		return total_price;
+	public int getTotalPrice() {
+		return totalPrice;
 	}
-	public void setTotal_price(int total_price) {
-		this.total_price = total_price;
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
 	}
-	public String getSend_address() {
-		return send_address;
+	public String getSendAddress() {
+		return sendAddress;
 	}
-	public void setSend_address(String send_address) {
-		this.send_address = send_address;
+	public void setSendAddress(String sendAddress) {
+		this.sendAddress = sendAddress;
 	}
 	@Override
 	public String toString() {
-		return "OrderVo [no=" + no + ", user_no=" + user_no + ", total_price=" + total_price + ", send_address="
-				+ send_address + "]";
+		return "OrderVo [no=" + no + ", userNo=" + userNo + ", userName=" + userName + ", userEmail=" + userEmail
+				+ ", totalPrice=" + totalPrice + ", sendAddress=" + sendAddress + "]";
 	}
 	
 }

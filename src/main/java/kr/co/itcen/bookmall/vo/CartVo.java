@@ -2,26 +2,29 @@ package kr.co.itcen.bookmall.vo;
 
 public class CartVo {
 	private Long no;
-	private Long book_no;
-	private Long user_no;
+	private Long bookNo;
+	private Long userNo;
 	private int stock;
+	private String userName;
+	private String bookName;
+	private int bookPrice;
 	public Long getNo() {
 		return no;
 	}
 	public void setNo(Long no) {
 		this.no = no;
 	}
-	public Long getBook_no() {
-		return book_no;
+	public Long getBookNo() {
+		return bookNo;
 	}
-	public void setBook_no(Long book_no) {
-		this.book_no = book_no;
+	public void setBookNo(Long bookNo) {
+		this.bookNo = bookNo;
 	}
-	public Long getUser_no() {
-		return user_no;
+	public Long getUserNo() {
+		return userNo;
 	}
-	public void setUser_no(Long user_no) {
-		this.user_no = user_no;
+	public void setUserNo(Long userNo) {
+		this.userNo = userNo;
 	}
 	public int getStock() {
 		return stock;
@@ -29,10 +32,30 @@ public class CartVo {
 	public void setStock(int stock) {
 		this.stock = stock;
 	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	public String getBookName() {
+		return bookName;
+	}
+	public void setBookName(String bookName) {
+		this.bookName = bookName;
+	}
+	public int getBookPrice() {
+		return bookPrice;
+	}
+	public void setBookPrice(int bookPrice) {
+		this.bookPrice = bookPrice;
+	}
 	@Override
 	public String toString() {
-		return "CartVo [no=" + no + ", book_no=" + book_no + ", user_no=" + user_no + ", stock=" + stock + "]";
+		return "CartVo [no=" + no + ", bookNo=" + bookNo + ", userNo=" + userNo + ", stock=" + stock + ", userName="
+				+ userName + ", bookName=" + bookName + ", bookPrice=" + bookPrice + "]";
 	}
 	
-
+	
+	
 }

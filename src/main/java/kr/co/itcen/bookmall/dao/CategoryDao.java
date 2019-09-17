@@ -89,7 +89,7 @@ public class CategoryDao {
 		try {
 			connection = getConnection();
 
-			String sql = "select no, name from category order by no asc";
+			String sql = "select * from category order by no asc";
 			pstmt = connection.prepareStatement(sql);
 
 			rs = pstmt.executeQuery();
